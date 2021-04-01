@@ -23,6 +23,8 @@ public class Interfaz extends javax.swing.JFrame {
      */
     public Interfaz() {
         initComponents();
+        this.setLocationRelativeTo(null);
+        this.setResizable(false);
     }
 
     /**
@@ -79,6 +81,7 @@ public class Interfaz extends javax.swing.JFrame {
                 BufferedReader br = new BufferedReader(fr);
                 String sLine = br.readLine();
                 if (!sLine.equals("")) {
+                    System.out.println(Evaluador.checkTypeOfExpression(sLine));
                     JOptionPane.showMessageDialog(null, "Archivo cargado correctamente", "Cargue OK", JOptionPane.INFORMATION_MESSAGE);
                     
                 } else {
