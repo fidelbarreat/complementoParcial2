@@ -81,7 +81,18 @@ public class Interfaz extends javax.swing.JFrame {
                 BufferedReader br = new BufferedReader(fr);
                 String sLine = br.readLine();
                 if (!sLine.equals("")) {
-                    System.out.println(Evaluador.checkTypeOfExpression(sLine));
+                    String postFija = Evaluador.checkTypeOfExpression(sLine);
+                    char[] ch = new char[postFija.length()];
+  
+                    // Copy character by character into array
+                    for (int i = 0; i < postFija.length(); i++) {
+                        ch[i] = postFija.charAt(i);
+                    }
+                    
+                    NodeArbol rootTree = Arbol.constructTree(ch);
+                    Arbol.Postorden(rootTree);
+                    System.out.println("");
+                    Arbol.inorder(rootTree);
                     JOptionPane.showMessageDialog(null, "Archivo cargado correctamente", "Cargue OK", JOptionPane.INFORMATION_MESSAGE);
                     
                 } else {
