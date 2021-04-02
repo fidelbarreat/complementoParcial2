@@ -5,10 +5,6 @@
  */
 package complementoparcial2;
 
-/**
- *
- * @author fidel
- */
 public class NodePilaArbol {
     NodeArbol info;
     NodePilaArbol next; 

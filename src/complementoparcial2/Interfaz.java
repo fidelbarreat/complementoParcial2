@@ -11,13 +11,17 @@ import java.io.FileReader;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
+import org.graphstream.graph.implementations.MultiGraph;
+import org.graphstream.ui.view.Viewer;
 /**
  *
  * @author fidel
  */
 public class Interfaz extends javax.swing.JFrame {
 
+    Arbol arbol = new Arbol();
+    private static MultiGraph graph;
+    private static Viewer viewer;
     /**
      * Creates new form Interfaz
      */
@@ -25,6 +29,34 @@ public class Interfaz extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setResizable(false);
+    }
+    
+    public void imprimirExpresiones(NodeArbol na) {
+        String acm = "";
+        String acmInfija = "Infija: " + Arbol.inorder(na, acm);
+        String acmPolaca = "Polaca: " + Arbol.Preorden(na, acm);
+        String acmPolacaInv = "Polaca Inversa: " + Arbol.Postorden(na, acm);
+        acm = acmInfija + "\n" + acmPolaca + "\n" + acmPolacaInv;
+        this.textArea.setText(acm);
+    }
+    
+    private void draw(){
+        
+        if(graph == null)
+            graph = new MultiGraph("Grafo");
+        else
+            graph.clear();
+        
+        System.setProperty("org.graphstream.ui", "swing"); 
+        System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
+        
+        graph.setAttribute("ui.quality");
+        graph.setAttribute("ui.antialias");
+        Arbol.draw(arbol.pRoot, graph);
+        if(viewer == null){
+            viewer = graph.display();
+            viewer.setCloseFramePolicy(Viewer.CloseFramePolicy.HIDE_ONLY);
+        }
     }
 
     /**
@@ -42,6 +74,7 @@ public class Interfaz extends javax.swing.JFrame {
         textArea = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Complemento");
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -90,9 +123,8 @@ public class Interfaz extends javax.swing.JFrame {
                     }
                     
                     NodeArbol rootTree = Arbol.constructTree(ch);
-                    Arbol.Postorden(rootTree);
-                    System.out.println("");
-                    Arbol.inorder(rootTree);
+                    imprimirExpresiones(rootTree);
+                    draw();
                     JOptionPane.showMessageDialog(null, "Archivo cargado correctamente", "Cargue OK", JOptionPane.INFORMATION_MESSAGE);
                     
                 } else {

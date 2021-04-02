@@ -5,10 +5,6 @@
  */
 package complementoparcial2;
 
-/**
- *
- * @author fidel
- */
 public class PilaArbol {
     static NodePilaArbol cima;
     static int en;

@@ -5,14 +5,12 @@
  */
 package complementoparcial2;
 
-/**
- *
- * @author fidel
- */
+import org.graphstream.graph.Node;
+import org.graphstream.graph.implementations.MultiGraph;
+
 public class Arbol {
-    // A utility function to check if 'c'
-    // is an operator
  
+    static NodeArbol pRoot;
     static boolean isOperator(char c) {
         if (c == '+' || c == '-'
                 || c == '*' || c == '/'
@@ -23,62 +21,90 @@ public class Arbol {
     }
  
     // Utility function to do inorder traversal
-    static void inorder(NodeArbol t) {
+    static String inorder(NodeArbol t, String acm) {
         if (t != null) {
-            inorder(t.left);
-            System.out.print(t.value + " ");
-            inorder(t.right);
+            acm = inorder(t.left, acm);
+            acm += t.value;
+            acm = inorder(t.right, acm);
         }
+        return acm;
     }
     
-    public static void Postorden(NodeArbol padre){
+    public static String Preorden(NodeArbol padre, String acm){
         if(padre!=null){
-            Postorden(padre.left);
-            Postorden(padre.right); 
-            System.out.print(padre.value+" ");
+            acm += padre.value;
+            acm = Postorden(padre.left, acm);
+            acm = Postorden(padre.right, acm); 
         }
+        return acm;
+    }
+    
+    public static String Postorden(NodeArbol padre, String acm){
+        if(padre!=null){
+            acm = Postorden(padre.left, acm);
+            acm = Postorden(padre.right, acm); 
+            acm += padre.value;
+        }
+        return acm;
     }
  
-    // Returns root of constructed tree for given
-    // postfix expression
     public static NodeArbol constructTree(char postfix[]) {
         PilaArbol pilaArbol = new PilaArbol();
         NodeArbol t, t1, t2;
  
-        // Traverse through every character of
-        // input expression
         for (int i = 0; i < postfix.length; i++) {
  
-            // If operand, simply push into stack
             if (!isOperator(postfix[i])) {
                 t = new NodeArbol(postfix[i]);
                 pilaArbol.apilar(t);
-            } else // operator
+            } else
             {
                 t = new NodeArbol(postfix[i]);
  
-                // Pop two top nodes
-                // Store top
                 t1 = pilaArbol.cima.info; 
-                pilaArbol.desapilar();// Remove top
+                pilaArbol.desapilar();
                 t2 = pilaArbol.cima.info;
                 pilaArbol.desapilar();
  
-                //  make them children
                 t.right = t1;
                 t.left = t2;
  
-                // System.out.println(t1 + "" + t2);
-                // Add this subexpression to stack
                 pilaArbol.apilar(t);
             }
         }
- 
-        //  only element will be root of expression
-        //  tree
-        t = pilaArbol.cima.info;
+
+        t = pRoot = pilaArbol.cima.info;
         pilaArbol.desapilar();
  
         return t;
+    }
+    
+    public static void draw(NodeArbol root, MultiGraph imp) {
+        
+        if (root != null) {
+            
+            Node tmp = imp.getNode(""+root.value);
+            
+            if(tmp == null){
+                imp.addNode(""+root.value);
+                tmp = imp.getNode(""+root.value);
+            }
+            
+            tmp.setAttribute("ui.style", "shape:circle;fill-color: #008f39;size: 35px; text-alignment: center;");
+            tmp.setAttribute("ui.label", ""+root.value);
+            if(root.left != null){
+                imp.addNode( ""+root.left.value );
+                imp.addEdge(""+root.value+":"+root.left.value, ""+root.value, ""+root.left.value);
+            }
+            
+            if(root.right != null){
+                imp.addNode( ""+root.right.value );
+                imp.addEdge(""+root.value+":"+root.right.value, ""+root.value, ""+root.right.value);
+            }
+            
+            draw(root.left,imp);
+            draw(root.right,imp);
+            
+        }
     }
 }

@@ -5,6 +5,8 @@
  */
 package complementoparcial2;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author fidel
@@ -113,15 +115,39 @@ public class Evaluador {
         switch (num) {
             case 1:
                 System.out.println("infija");
-                return infija_postfija(expression);
+                String postfija = infija_postfija(expression);
+                if (evaluatePostfix(postfija) == 1) {
+                    return postfija;
+                } else {
+                    JOptionPane.showMessageDialog(null, "La expresión ingresada no es válida");
+                    return "";
+                }
             case 2:
                 System.out.println("prefija");
                 return prefija_postfija(expression);
             case 3:
                 System.out.println("postfija");
-                return expression;
+                if (evaluatePostfix(expression) == 1) {
+                    return expression;
+                } else {
+                    JOptionPane.showMessageDialog(null, "La expresión ingresada no es válida");
+                    return "";
+                }
             default:
                 return "ERR";
         }
+    }
+
+    public static int evaluatePostfix(String expression) {
+        int counter = 0;
+        for (int i = 0; i < expression.length(); i++) {
+            char x = expression.charAt(i);
+            if (Character.isLetterOrDigit(x)) {
+                counter++;
+            } else if (x == '*' || x == '/' || x == '+' || x == '-' || x == '^') {
+                counter--;
+            }
+        }
+        return counter;
     }
 }

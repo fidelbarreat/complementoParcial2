@@ -5,7 +5,6 @@
  */
 package complementoparcial2;
 
-
 public class Node {
     String info;
     Node next; 
